@@ -1,0 +1,44 @@
+diferencia entre jsx y react.create
+
+const element = document.createElement('h1');
+element.innerText = 'Hello, Platzi Badges!';
+
+const container = document.getElementById('app');
+
+container.appendChild(element);
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+const jsx = <h1>Hello, Platzi Badges!</h1>;
+const element = React.createElement('a', {href: 'https://youtube.com', target: '_blank'}, 'Hola soy los children')
+
+const name = `Carlos`
+
+const element = React.createElement(
+    'h1',
+    {},
+    `Hi, my name is ${name}`,
+)
+
+function sum (){
+    return 1+4;
+}
+
+const jsx = <h1>Hi! the sum is {sum()}</h1> // dentro la llava los no se va renderizar
+
+const jsx =(
+    <div>
+        <h1>Hi! my name is Carlos</h1>
+        <p>I'm developer frontend</p>
+    </div>
+);
+
+const element = React.createElement('div', {},
+    React.createElement('h1', {}, `Hi! my name is Carlos`),
+    React.createElement('p', {}, `I'm developer perros`)
+)
+
+const container = document.getElementById('app');
+
+ReactDOM.render(element, container);
