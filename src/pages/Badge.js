@@ -4,34 +4,27 @@ import confLogo from '../images/badge-header.svg'
 import BadgesList from '../components/BadgesList'
 import { Link } from 'react-router-dom'
 import api from '../api'
-
+import PageLoading from '../components/PageLoading'
+import PageError from '../components/PageError'
 
 class Badge extends React.Component{
-    
-    constructor(props){
-        super(props);
-        console.log(`constructor 1st`);
-        this.state = {
+    state = {
             data:undefined,
             loading:true,
             error: null,
         }
-        
-    }
-    
+
     componentDidMount(){
         this.fetchData();
 
-        // this.timeoutID = setTimeout(()=>{
-        //     this.setState({
-        //         loading:true,
-        //         data:undefined,
-        //         error:null
-        //     })
-        // }, 3000)
+        this.intervalId = setInterval(this.fetchData, 5000);
     }
 
-    async fetchData(){
+    componentWillUnmount(){
+        clearInterval(this.intervalId);
+    }
+
+    fetchData = async () =>{
         this.setState({loading:true, error:null})
         
         try{
@@ -42,32 +35,32 @@ class Badge extends React.Component{
         }
     }
 
-    componentDidUpdate(prevProps, prevState){
-        console.log(`5. componetDidUpdate()`)
+    // componentDidUpdate(prevProps, prevState){
+    //     console.log(`5. componetDidUpdate()`)
 
-        console.log({
-            prevProps: prevProps,
-            prevState:prevState,
-        })
+    //     console.log({
+    //         prevProps: prevProps,
+    //         prevState:prevState,
+    //     })
 
-        console.log({
-            props:this.props,
-            state: this.state,
-        })
-    }
+    //     console.log({
+    //         props:this.props,
+    //         state: this.state,
+    //     })
+    // }
 
-    componentWillUnmount(){
-        console.log(`6. y se marcho...`)
-        clearTimeout(this.timeoutID);
-    }
+    // componentWillUnmount(){
+    //     console.log(`6. y se marcho...`)
+    //     clearTimeout(this.timeoutID);
+    // }
 
     render(){
-        if(this.state.loading ===true){
-            return 'Loading... '
+        if(this.state.loading ===true && !this.state.data){
+            return <PageLoading />
         }
         
         if(this.state.error){
-            return `Hay error ${this.state.error}`
+            return <PageError error={this.state.error}/>
         }
         return( 
             <React.Fragment>                
@@ -86,6 +79,8 @@ class Badge extends React.Component{
                 </div>
 
                 <BadgesList badges={this.state.data}/>
+
+                {this.state.loading && 'loading...'}
             </React.Fragment>
         )
     }

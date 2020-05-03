@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap');
 
+.item{
+    list-style: none;
+}
 
 .Badges__item{
     margin-top: 10px;
@@ -15,9 +18,11 @@
 }
 
 .Badges__data{
-    margin-left: 1rem;
+    margin: .4rem 0 0 1rem;
 }
-
+.Badges__data > span {
+    color: #0000ff;
+}
 .Badges__list .Badges__data-name{
     margin-bottom: 0;
     font-family:'Oswald', sans-serif;
