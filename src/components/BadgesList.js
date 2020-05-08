@@ -1,35 +1,60 @@
 import React from 'react'
-import './styles/BadgesList.css'
 import { Link } from 'react-router-dom'
-import Gravatar from './Gravatar'
+import BadgeItem from './BadgeItem'
 
-class BadgesList extends React.Component{
-    render(){
-        if(this.props.badges.length === 0){
-            return (
-                <div className="Badges__container">
-                    <h3>No badges were found</h3>
-                    <Link to="badges/new" className="btn btn-primary">Creade new badge</Link>
-                </div>
-            )
-        }
-        return(
+function useSearchBadges(badges){
+    const[query, setQuery] = React.useState('') 
+    const [filteredBadges, setFilteredBadges] = React.useState(badges);
 
-            <div className="Badges__list">
+    React.useMemo(()=>{
+        const result = badges.filter(badge=>`${badge.firstName}${badge.lastName}`.toLowerCase().includes(query.toLowerCase()))
+        setFilteredBadges(result)
+    }, [badges, query]);
+
+    return { query, setQuery, filteredBadges }
+}
+
+function BadgesList (props){
+    const badges = props.badges
+    const{query, setQuery, filteredBadges} = useSearchBadges(badges) 
+
+    if(filteredBadges.length === 0){
+        return (
+                    <div className="container">
+                        <div className="form-group">
+                            <label>Filter Badges</label>
+                            <input type="text" className='form-control'
+                                value={query}
+                                onChange={e => {
+                                    setQuery(e.target.value)
+                                }}
+                            />
+                        </div>
+
+                        <h3>No badges were found</h3>
+                        <Link to="badges/new" className="btn btn-primary">Creade new badge</Link>
+                    </div>
+                )
+    }
+    return(
+        <div className="container">
+            <div className="form-group">
+                <label>Filter Badges</label>
+                <input type="text" className='form-control'
+                    value={query}
+                    onChange={e => {
+                        setQuery(e.target.value)
+                    }}
+                />
+            </div>
+
             <div className="Badges__container">
                 <ul>
-                    {this.props.badges.map(item => {    
+                    {filteredBadges.map(item => {    
                         return(
                             <li className="item" key={item.id} >
                                 <Link className="text-reset text-decoration-none Badges__item" to={`badges/${item.id}`}>
-                                    <div className="Badges__img">
-                                        <Gravatar email={item.email} alt="avatar" />
-                                    </div>
-                                    <div className="Badges__data">
-                                        <p className="Badges__data-name">{item.firstName} {item.lastName}</p>
-                                        <span >@{item.twitter}</span>
-                                        <p>{item.jobTitle}</p>
-                                    </div>
+                                    <BadgeItem badge = {item}/>
                                 </Link>
                             </li>
                         )
@@ -37,8 +62,7 @@ class BadgesList extends React.Component{
                 </ul>
             </div>
         </div>
-        )
-    }
+    )
 }
 
 export default BadgesList; 
