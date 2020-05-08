@@ -15,6 +15,7 @@ class BadgeDetailsLogic extends React.Component {
             jobTitle:'',
             twitter:'',
         },
+        modalIsOpen:false,
     }
     
     componentDidMount (){
@@ -31,6 +32,25 @@ class BadgeDetailsLogic extends React.Component {
         }
     }
 
+    handleCloseModal=()=>{
+        this.setState({modalIsOpen:false})
+    }
+    handleOpenModal=()=>{
+        this.setState({modalIsOpen:true})
+    }
+    handleDeleteBadge = async ()=>{
+        this.setState({loading:true, error:null})
+
+        try{
+            await api.badges.remove(this.props.match.params.badgeId);
+            this.setState({loading:false, error:null})
+            this.props.history.push('/badges')
+        }catch(err){
+            this.setState({loading:false, error:err})
+        }
+    
+    }
+
     render() {
 
         if(this.state.loading){
@@ -40,8 +60,15 @@ class BadgeDetailsLogic extends React.Component {
             return <PageError error = {this.state.error} />
         }
         return (
-            <BadgeDetails badge = {this.state.data}/>
+            <BadgeDetails 
+            badge = {this.state.data} 
+            onCloseModal={this.handleCloseModal}
+            modalIsOpen={this.state.modalIsOpen}
+            onOpenModal={this.handleOpenModal}
+            onDeleteBadge={this.handleDeleteBadge}
+            />
         );
+        
     }
 }
 
